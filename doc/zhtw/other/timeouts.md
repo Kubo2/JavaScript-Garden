@@ -38,7 +38,7 @@
     function foo(){
         // 執行 1 秒
     }
-    setInterval(foo, 1000);
+    setInterval(foo, 100);
 
 上面的程式中， `foo` 會執行一次然後被阻塞了一分鐘
 
@@ -50,7 +50,7 @@
 
     function foo(){
         // something that blocks for 1 second
-        setTimeout(foo, 1000);
+        setTimeout(foo, 100);
     }
     foo();
 
@@ -73,7 +73,7 @@
         clearTimeout(i);
     }
 
-可能還有一些定石器不會在上面的代碼中被清除，因此我們可以事先保存所有的定時器 ID，然後一把清除。
+可能還有一些定時器不會在上面的代碼中被清除，因此我們可以事先保存所有的定時器 ID，然後一把清除。
 
 
     // clear "all" timeouts
@@ -105,31 +105,31 @@ This feature should **never** be used because it internally makes use of `eval`.
     }
     bar();
 
-Since `eval` is not getting called [directly](#core.eval) in this case, the string 
-passed to `setTimeout` will be executed in the *global scope*; thus, it will 
+Since `eval` is not getting called [directly](#core.eval) in this case, the string
+passed to `setTimeout` will be executed in the *global scope*; thus, it will
 not use the local variable `foo` from the scope of `bar`.
 
 It is further recommended to **not** use a string to pass arguments to the
-function that will get called by either of the timeout functions. 
+function that will get called by either of the timeout functions.
 
     function foo(a, b, c) {}
-    
+
     // NEVER use this
     setTimeout('foo(1, 2, 3)', 1000)
 
     // Instead use an anonymous function
     setTimeout(function() {
-        foo(a, b, c);
+        foo(1, 2, 3);
     }, 1000)
 
-> **Note:** While it is also possible to use the syntax 
-> `setTimeout(foo, 1000, a, b, c)`, it is not recommended, as its use may lead
-> to subtle errors when used with [methods](#function.this). 
+> **Note:** While it is also possible to use the syntax
+> `setTimeout(foo, 1000, 1, 2, 3)`, it is not recommended, as its use may lead
+> to subtle errors when used with [methods](#function.this).
 
 ### In Conclusion
 
-A string should **never** be used as the parameter of `setTimeout` or 
-`setInterval`. It is a clear sign of **really** bad code, when arguments need 
+A string should **never** be used as the parameter of `setTimeout` or
+`setInterval`. It is a clear sign of **really** bad code, when arguments need
 to be supplied to the function that gets called. An *anonymous function* should
 be passed that then takes care of the actual call.
 
@@ -137,4 +137,3 @@ Furthermore, the use of `setInterval` should be avoided because its scheduler is
 blocked by executing JavaScript.
 
 [1]: http://en.wikipedia.org/wiki/Document_Object_Model "Document Object Model"
-
